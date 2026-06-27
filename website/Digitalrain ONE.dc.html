@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{-webkit-font-smoothing:antialiased;background:#07111B}
+body{background:#07111B}
+::selection{background:#3DDC97;color:#07111B}
+img{display:block;max-width:100%}
+@keyframes drScrollCue{0%{transform:translateY(0);opacity:0}25%{opacity:1}100%{transform:translateY(13px);opacity:0}}
+@keyframes drScan{0%{transform:translateY(-130%)}100%{transform:translateY(1500%)}}
+@keyframes drBadge{0%,100%{opacity:.5}50%{opacity:1}}
+[data-reveal]{will-change:transform,opacity}
+[data-bar]{transition:width .9s cubic-bezier(.16,1,.3,1)}
+@media (max-width:1000px){
+  [data-r="modules"]{grid-template-columns:repeat(2,1fr)!important}
+  [data-r="kpi6"]{grid-template-columns:repeat(3,1fr)!important}
+  [data-r="assetgrid"]{grid-template-columns:repeat(2,1fr)!important}
+}
+@media (max-width:760px){
+  [data-r="navlinks"]{display:none!important}
+  [data-r="kpi6"]{grid-template-columns:repeat(2,1fr)!important}
+  [data-r="assetgrid"]{grid-template-columns:1fr!important}
+  [data-r="two"]{grid-template-columns:1fr!important;gap:36px!important}
+  [data-r="four"]{grid-template-columns:repeat(2,1fr)!important}
+  [data-r="modules"]{grid-template-columns:1fr!important}
+  [data-r="twinchips"]{grid-template-columns:1fr 1fr!important}
+  [data-r="about3"]{grid-template-columns:1fr!important}
+  [data-r="assetimg"]{order:2!important}
+  [data-r="assettext"]{order:1!important}
+}
+</style>
+</helmet>
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<rect width="100" height="100" fill="#07111B"/>
+<text x="50" y="44" font-family="monospace" font-size="13" font-weight="700" fill="#3DDC97" text-anchor="middle" letter-spacing="1">ONE</text>
+<rect x="32" y="56" width="36" height="3" rx="1.5" fill="#3DDC97" opacity="0.85"/>
+<rect x="38" y="63" width="24" height="2.5" rx="1.25" fill="#9DB0AC" opacity="0.6"/>
+</svg>
+</template>
+<div data-dr-root="" style="--accent:#3DDC97;--navy:#07111B;--panel:#0C1620;--panel2:#0F1C28;--line:rgba(255,255,255,0.08);--line2:rgba(255,255,255,0.15);--t1:#EAF6F0;--t2:#9DB0AC;--t3:#62736E;--sans:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;--amber:#F5A524;font-family:var(--sans);color:var(--t1);background:var(--navy);position:relative">
+
+  <div data-progress="" style="position:fixed;top:0;left:0;height:2px;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:0 50%;z-index:60;box-shadow:0 0 12px var(--accent)"></div>
+
+  <header style="position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:15px 5vw;backdrop-filter:blur(22px) saturate(1.4);background:rgba(7,17,27,0.5);border-bottom:1px solid var(--line)">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div style="width:28px;height:28px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(61,220,151,.45)">
+        <div style="width:9px;height:9px;border-radius:2px;background:#07140E"></div>
+      </div>
+      <div style="line-height:1.05">
+        <div style="font-weight:800;letter-spacing:.16em;font-size:15px">ONE</div>
+        <div style="font-weight:700;letter-spacing:.24em;font-size:7.5px;color:var(--accent);opacity:.85">DIGITALRAIN</div>
+      </div>
+    </div>
+    <nav data-r="navlinks" style="display:flex;align-items:center;gap:30px;font-size:13.5px;color:var(--t2);font-weight:500">
+      <a onClick="{{ goPlatform }}" style="color:var(--t2);text-decoration:none;cursor:pointer">Platform</a>
+      <a onClick="{{ goTwin }}" style="color:var(--t2);text-decoration:none;cursor:pointer">Digital twin</a>
+      <a onClick="{{ goAssets }}" style="color:var(--t2);text-decoration:none;cursor:pointer">Assets</a>
+      <a onClick="{{ goIndustries }}" style="color:var(--t2);text-decoration:none;cursor:pointer">Industries</a>
+      <a onClick="{{ goAbout }}" style="color:var(--t2);text-decoration:none;cursor:pointer">Company</a>
+    </nav>
+    <button onClick="{{ bookDemo }}" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:11px;background:var(--accent);color:#07140E;font-weight:700;font-size:13px;border:none;cursor:pointer;font-family:var(--sans)">Book a demo</button>
+  </header>
+
+  <!-- HERO -->
+  <section style="position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 6vw 80px;overflow:hidden">
+    <canvas data-rain="" style="position:absolute;inset:0;width:100%;height:100%;z-index:0;display:block"></canvas>
+    <div style="position:absolute;inset:0;z-index:0;pointer-events:none;background:radial-gradient(125% 80% at 50% 28%,rgba(7,17,27,0) 0%,rgba(7,17,27,.45) 62%,rgba(7,17,27,.92) 100%)"></div>
+    <div style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(58% 46% at 50% 50%,rgba(7,17,27,.82) 0%,rgba(7,17,27,.5) 48%,rgba(7,17,27,0) 100%)"></div>
+    <div style="position:relative;display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border:1px solid var(--line2);border-radius:999px;background:rgba(7,17,27,.4);backdrop-filter:blur(8px);margin-bottom:30px">
+      <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 9px var(--accent)"></span>
+      <span style="font:600 11px var(--mono);letter-spacing:.14em;color:var(--t2);text-transform:uppercase">Real-time digital twin for mining</span>
+    </div>
+    <h1 style="position:relative;font-size:clamp(40px,7.2vw,86px);font-weight:700;letter-spacing:-.035em;line-height:0.98;max-width:14ch;text-wrap:balance">The living model of your operation.</h1>
+    <p style="position:relative;font-size:clamp(17px,2.1vw,22px);color:var(--t2);max-width:60ch;margin-top:26px;line-height:1.5;text-wrap:pretty">ONE turns every sensor, asset and process across your site into a single real‑time twin — so you can see what's happening, predict what's next, and act before downtime does.</p>
+    <div style="position:relative;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:38px">
+      <button onClick="{{ bookDemo }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:12px;background:var(--accent);color:#07140E;font-weight:700;font-size:15px;border:none;cursor:pointer;font-family:var(--sans);box-shadow:0 0 30px rgba(61,220,151,.32)">Book a demo<i data-lucide="arrow-right" width="17" height="17" stroke-width="2.2"></i></button>
+    </div>
+    <div style="position:absolute;bottom:30px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px">
+      <span style="font:600 10px var(--mono);letter-spacing:.2em;color:var(--t3);text-transform:uppercase">Scroll</span>
+      <div style="width:22px;height:34px;border:1px solid var(--line2);border-radius:12px;display:flex;justify-content:center;padding-top:7px">
+        <span style="width:3px;height:7px;border-radius:2px;background:var(--accent);animation:drScrollCue 1.8s infinite"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLATFORM / WHAT IT DOES (pinned) -->
+  <section id="platform" data-pin="" style="position:relative;z-index:2;height:230vh;background:transparent">
+    <div data-pinstage="" style="position:absolute;top:0;left:0;right:0;height:100vh;display:flex;flex-direction:column;justify-content:center;padding:0 7vw;max-width:1180px;margin:0 auto">
+      <div style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:36px">What ONE does</div>
+      <div style="display:flex;flex-direction:column;gap:clamp(26px,4.5vh,52px)">
+        <sc-for list="{{ pillars }}" as="item" hint-placeholder-count="3">
+          <div data-step="" style="opacity:0;display:flex;gap:clamp(16px,2.5vw,30px);align-items:flex-start">
+            <div style="font:700 14px var(--mono);color:var(--accent);min-width:38px;padding-top:clamp(8px,1.4vw,18px)">{{ item.no }}</div>
+            <div>
+              <div style="font-size:clamp(32px,6.2vw,72px);font-weight:700;letter-spacing:-.03em;line-height:1">{{ item.word }}</div>
+              <div style="font-size:clamp(15px,2vw,23px);color:var(--t2);margin-top:10px;max-width:680px;line-height:1.45">{{ item.copy }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIGITAL TWIN -->
+  <section id="twin" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+    <div style="max-width:1240px;margin:0 auto;width:100%">
+      <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">Live operational model · Engebø</div>
+      <h2 data-reveal="" style="font-size:clamp(30px,4.4vw,54px);font-weight:700;letter-spacing:-.03em;line-height:1.02;max-width:16ch">One screen. The whole site.</h2>
+      <p data-reveal="" style="font-size:clamp(15px,1.7vw,19px);color:var(--t2);max-width:58ch;margin-top:18px;line-height:1.5">Production, uptime, silos, feeders, tunnels and vessel loading — every node of the operation, mirrored as it happens and read straight off the model.</p>
+    </div>
+
+    <div data-reveal="" data-dy="50" style="position:relative;width:100vw;margin-left:calc(50% - 50vw);margin-top:clamp(34px,5vh,56px);overflow:hidden;border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)">
+      <div style="position:relative;width:100%;height:clamp(420px,64vh,760px)">
+        <img src="assets/digital-twin.png" alt="Engebø digital twin" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">
+        <div style="position:absolute;inset:0;background:linear-gradient(0deg,rgba(7,17,27,.92) 2%,rgba(7,17,27,.22) 48%,rgba(7,17,27,.12) 100%)"></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,17,27,.55) 0%,rgba(7,17,27,0) 18%,rgba(7,17,27,0) 82%,rgba(7,17,27,.55) 100%)"></div>
+        <div style="position:absolute;top:18px;right:6vw;display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:999px;background:rgba(7,17,27,.7);border:1px solid var(--line2);backdrop-filter:blur(6px);animation:drBadge 2s ease-in-out infinite"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)"></span><span style="font:600 9px var(--mono);letter-spacing:.14em;color:var(--t1)">LIVE</span></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:0 6vw clamp(18px,2.5vw,30px)">
+          <div data-r="twinchips" style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px">
+            <sc-for list="{{ twinStats }}" as="item" hint-placeholder-count="4">
+              <div style="padding:14px 16px;border:1px solid var(--line2);border-radius:12px;background:rgba(7,17,27,.58);backdrop-filter:blur(10px)">
+                <div style="font:600 9px var(--mono);letter-spacing:.06em;color:var(--t2);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.label }}</div>
+                <div data-twinval="" data-base="{{ item.base }}" data-amp="{{ item.amp }}" data-suf="{{ item.suf }}" data-dec="{{ item.dec }}" style="font:700 18px var(--mono);color:var(--accent);margin-top:5px">{{ item.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width:1240px;margin:0 auto;width:100%">
+      <div data-r="twinchips" data-reveal="" data-dy="26" style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:14px">
+        <sc-for list="{{ twinNodes }}" as="item" hint-placeholder-count="4">
+          <div style="padding:12px 15px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.022)">
+            <div style="font:600 8.5px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.label }}</div>
+            <div style="font:600 13px var(--mono);color:var(--accent);margin-top:4px">{{ item.value }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE MONITORING -->
+  <section id="live" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+    <div style="position:absolute;top:6%;right:-8%;width:min(640px,60vw);height:560px;background:radial-gradient(circle,rgba(61,220,151,.10) 0%,rgba(61,220,151,0) 68%);pointer-events:none;z-index:-1"></div>
+    <div data-r="two" style="max-width:1240px;margin:0 auto;display:grid;grid-template-columns:0.9fr 1.1fr;gap:clamp(36px,5vw,72px);align-items:center">
+      <div>
+        <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">Real-time telemetry</div>
+        <h2 data-reveal="" style="font-size:clamp(30px,4.2vw,50px);font-weight:700;letter-spacing:-.03em;line-height:1.04">Every sensor, sub-second.</h2>
+        <p data-reveal="" style="font-size:clamp(15px,1.6vw,18px);color:var(--t2);margin-top:18px;line-height:1.55;max-width:46ch">Temperature, pressure, vibration, fuel and load stream into ONE continuously. Thresholds, trends and anomalies are computed live — no overnight batch, no blind spots.</p>
+        <div data-reveal="" style="display:flex;align-items:center;gap:11px;margin-top:24px">
+          <span style="font:600 9.5px var(--mono);letter-spacing:.1em;color:var(--t3);text-transform:uppercase">Window</span>
+          <div style="display:flex;gap:6px">
+            <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:8px;border:1px solid var(--line2);color:var(--t3)">1H</span>
+            <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:8px;border:1px solid var(--line2);color:var(--t3)">24H</span>
+            <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:8px;border:1px solid var(--accent);color:var(--accent);background:rgba(61,220,151,.12)">7D</span>
+            <span style="font:600 11px var(--mono);padding:5px 11px;border-radius:8px;border:1px solid var(--line2);color:var(--t3)">30D</span>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-top:22px">
+          <sc-for list="{{ sensors }}" as="item" hint-placeholder-count="6">
+            <div data-reveal="" data-dy="28" data-sensor="" style="padding:14px 15px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.025)">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div style="font:600 9.5px var(--mono);letter-spacing:.07em;color:var(--t3);text-transform:uppercase">{{ item.label }}</div>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent);animation:drBadge 1.8s ease-in-out infinite"></span>
+              </div>
+              <div style="margin-top:7px;display:flex;align-items:baseline;gap:5px">
+                <span data-dec="{{ item.dec }}" data-live="" data-base="{{ item.val }}" data-amp="{{ item.amp }}" data-kind="{{ item.kind }}" style="font:700 24px var(--mono);color:var(--t1);font-variant-numeric:tabular-nums">{{ item.val }}</span>
+                <span style="font:500 11px var(--mono);color:var(--t2)">{{ item.unit }}</span>
+              </div>
+              <canvas data-spark="" data-base="{{ item.val }}" data-amp="{{ item.amp }}" style="width:100%;height:24px;margin-top:9px;display:block"></canvas>
+            </div>
+          </sc-for>
+        </div>
+        <div data-reveal="" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:18px">
+          <sc-for list="{{ charts }}" as="item" hint-placeholder-count="4">
+            <span style="display:inline-flex;align-items:center;gap:7px;font:500 11px var(--mono);color:var(--t2);padding:6px 12px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.02)"><span style="width:5px;height:5px;border-radius:50%;background:var(--accent)"></span>{{ item.name }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div data-reveal="" data-dy="60" style="border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.55);background:#0A131C">
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.02)">
+          <div style="display:flex;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:#ff5f57"></span><span style="width:9px;height:9px;border-radius:50%;background:#febc2e"></span><span style="width:9px;height:9px;border-radius:50%;background:#28c840"></span></div>
+          <span style="font:600 11px var(--mono);color:var(--t3)">one.app — real-time IoT sensor data</span>
+          <span style="margin-left:auto;display:flex;align-items:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);animation:drBadge 2s ease-in-out infinite"></span><span style="font:600 9px var(--mono);letter-spacing:.14em;color:var(--t2)">LIVE</span></span>
+        </div>
+        <div style="display:flex;min-height:430px">
+          <div style="width:120px;flex:none;border-right:1px solid var(--line);padding:13px 9px;display:flex;flex-direction:column;gap:2px;background:rgba(255,255,255,.012)">
+            <div style="display:flex;align-items:center;gap:7px;padding:0 7px 12px">
+              <span style="width:17px;height:17px;border-radius:5px;background:var(--accent);display:flex;align-items:center;justify-content:center"><span style="width:5px;height:5px;border-radius:1.5px;background:#07140E"></span></span>
+              <span style="font:800 11px var(--sans);letter-spacing:.14em;color:var(--t1)">ONE</span>
+            </div>
+            <sc-for list="{{ appNav }}" as="item" hint-placeholder-count="7">
+              <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:7px;background:{{ item.bg }}">
+                <i data-lucide="{{ item.icon }}" width="13" height="13" stroke-width="1.7" style="color:{{ item.col }}"></i>
+                <span style="font:{{ item.fw }} 10.5px var(--sans);color:{{ item.col }}">{{ item.name }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <div style="flex:1;min-width:0;padding:13px 14px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <span style="font:700 12.5px var(--sans);color:var(--t1)">Real-time IoT sensor data</span>
+              <div style="display:flex;gap:4px">
+                <span style="font:600 8.5px var(--mono);padding:3px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--t3)">1H</span>
+                <span style="font:600 8.5px var(--mono);padding:3px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--t3)">24H</span>
+                <span style="font:600 8.5px var(--mono);padding:3px 7px;border-radius:5px;border:1px solid var(--accent);color:var(--accent);background:rgba(61,220,151,.12)">7D</span>
+                <span style="font:600 8.5px var(--mono);padding:3px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--t3)">30D</span>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+              <sc-for list="{{ appStats }}" as="item" hint-placeholder-count="6">
+                <div style="padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.018)">
+                  <div style="font:600 7px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.label }}</div>
+                  <div style="margin-top:4px;display:flex;align-items:baseline;gap:3px"><span style="font:700 14px var(--mono);color:var(--t1);font-variant-numeric:tabular-nums">{{ item.val }}</span><span style="font:500 8px var(--mono);color:var(--t3)">{{ item.unit }}</span></div>
+                  <div style="height:3px;border-radius:2px;background:rgba(255,255,255,.07);margin-top:7px;overflow:hidden"><div style="width:{{ item.w }}%;height:100%;background:{{ item.col }};border-radius:2px"></div></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+              <div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:rgba(255,255,255,.015)">
+                <div style="font:600 8px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;margin-bottom:5px">Engine temperature trend</div>
+                <canvas data-chart="area" data-cols="#3DDC97" data-n="46" style="width:100%;height:62px;display:block"></canvas>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:rgba(255,255,255,.015)">
+                <div style="font:600 8px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;margin-bottom:5px">Hydraulic pressure</div>
+                <canvas data-chart="line" data-cols="#4DA3FF" data-n="46" style="width:100%;height:62px;display:block"></canvas>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:rgba(255,255,255,.015)">
+                <div style="font:600 8px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase;margin-bottom:5px">Vibration analysis</div>
+                <canvas data-chart="bars" data-cols="#A78BFA" data-n="26" style="width:100%;height:62px;display:block"></canvas>
+              </div>
+              <div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:rgba(255,255,255,.015)">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                  <span style="font:600 8px var(--mono);letter-spacing:.04em;color:var(--t3);text-transform:uppercase">Fuel &amp; oil levels</span>
+                  <span style="display:flex;gap:7px"><span style="display:inline-flex;align-items:center;gap:3px;font:500 7px var(--mono);color:var(--t3)"><span style="width:5px;height:5px;border-radius:50%;background:#F5A524"></span>Fuel %</span><span style="display:inline-flex;align-items:center;gap:3px;font:500 7px var(--mono);color:var(--t3)"><span style="width:5px;height:5px;border-radius:50%;background:#3DDC97"></span>Oil PSI</span></span>
+                </div>
+                <canvas data-chart="dual" data-cols="#F5A524,#3DDC97" data-n="46" style="width:100%;height:62px;display:block"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ASSETS -->
+  <section id="assets" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">Asset intelligence</div>
+      <h2 data-reveal="" style="font-size:clamp(30px,4.2vw,50px);font-weight:700;letter-spacing:-.03em;line-height:1.04;max-width:18ch">Health for every machine.</h2>
+      <p data-reveal="" style="font-size:clamp(15px,1.6vw,18px);color:var(--t2);margin-top:18px;line-height:1.55;max-width:60ch">A health score and an equipment-performance score for every excavator, hauler, loader, rig and conveyor — 20 connected assets, alerts raised before a failure becomes downtime.</p>
+
+      <div data-r="kpi6" style="display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:36px">
+        <sc-for list="{{ fleetKpis }}" as="item" hint-placeholder-count="6">
+          <div data-reveal="" data-dy="28" style="padding:16px 16px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.022)">
+            <div style="font:600 9.5px var(--mono);letter-spacing:.07em;color:var(--t3);text-transform:uppercase">{{ item.label }}</div>
+            <div style="margin-top:8px;display:flex;align-items:baseline;gap:6px">
+              <span data-count="{{ item.val }}" data-dec="0" data-suf="{{ item.suf }}" style="font-size:clamp(26px,3vw,34px);font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">{{ item.val }}{{ item.suf }}</span>
+              <span style="font:600 11px var(--mono);color:{{ item.subColor }}">{{ item.sub }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div data-reveal="" style="margin-top:14px;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.022);padding:18px 20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:13px">
+          <span style="font:600 11px var(--mono);letter-spacing:.06em;color:var(--t2);text-transform:uppercase">Health risk distribution</span>
+          <span style="font:500 11px var(--mono);color:var(--t3)">20 assets analyzed</span>
+        </div>
+        <div style="display:flex;height:8px;border-radius:5px;overflow:hidden;background:rgba(255,255,255,.06)">
+          <div style="width:95%;background:var(--accent)"></div>
+          <div style="width:5%;background:#F5A524"></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:12px;font:500 12px var(--mono);color:var(--t2)">
+          <span style="display:inline-flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:var(--accent)"></span>Low&nbsp;<span style="color:var(--t3)">95.0% (19)</span></span>
+          <span style="display:inline-flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:#F5A524"></span>Medium&nbsp;<span style="color:var(--t3)">5.0% (1)</span></span>
+          <span style="display:inline-flex;align-items:center;gap:7px"><span style="width:7px;height:7px;border-radius:50%;background:#EF5B5B"></span>High&nbsp;<span style="color:var(--t3)">0.0% (0)</span></span>
+        </div>
+      </div>
+
+      <div data-r="assetgrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:clamp(28px,4vh,44px)">
+        <sc-for list="{{ machines }}" as="item" hint-placeholder-count="5">
+          <div data-sensor="" data-reveal="" data-dy="34" style="display:flex;flex-direction:column;padding:18px 18px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.022)">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+              <div style="min-width:0">
+                <div style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.name }}</div>
+                <div style="font:500 10.5px var(--mono);color:var(--t3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ item.model }} · {{ item.hours }} hrs</div>
+              </div>
+              <span style="flex:none;font:600 8.5px var(--mono);letter-spacing:.05em;padding:3px 7px;border-radius:5px;text-transform:uppercase;color:{{ item.statusColor }};border:1px solid {{ item.statusBorder }}">{{ item.status }}</span>
+            </div>
+            <canvas data-spark="" data-col="{{ item.statusColor }}" data-base="{{ item.eps }}" data-amp="{{ item.samp }}" data-dec="0" style="width:100%;height:46px;margin-top:16px;display:block"></canvas>
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px">
+              <div style="display:flex;align-items:baseline;gap:6px">
+                <span style="font:600 9px var(--mono);letter-spacing:.06em;color:var(--t3);text-transform:uppercase">EPS</span>
+                <span data-live="" data-base="{{ item.eps }}" data-amp="{{ item.samp }}" data-dec="0" data-kind="eps" style="font:700 19px var(--mono);color:{{ item.statusColor }};font-variant-numeric:tabular-nums">{{ item.eps }}</span>
+              </div>
+              <div style="flex:1;max-width:130px">
+                <div style="display:flex;justify-content:space-between;font:600 9px var(--mono);color:var(--t2);margin-bottom:5px"><span>HEALTH</span><span style="color:{{ item.statusColor }}">{{ item.health }}%</span></div>
+                <div style="height:5px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden"><div data-bar="{{ item.health }}" style="width:0;height:100%;border-radius:3px;background:{{ item.statusColor }}"></div></div>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      </div>
+    </section>
+  
+
+  <!-- METRICS / PROOF -->
+  
+
+  <section id="metrics" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+    <div style="max-width:1180px;margin:0 auto;text-align:center">
+      <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">Proven on site</div>
+      <h2 data-reveal="" style="font-size:clamp(30px,4.6vw,56px);font-weight:700;letter-spacing:-.03em;line-height:1.02;max-width:18ch;margin:0 auto">Real numbers from a live operation.</h2>
+      <div data-r="four" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,3vw,40px);margin-top:clamp(48px,7vh,80px)">
+        <sc-for list="{{ kpis }}" as="item" hint-placeholder-count="4">
+          <div data-reveal="" data-dy="34" style="text-align:left">
+            <div style="display:flex;align-items:baseline;gap:3px">
+              <span data-count="{{ item.val }}" data-dec="{{ item.dec }}" data-suf="{{ item.suf }}" style="font-size:clamp(38px,5.4vw,68px);font-weight:700;letter-spacing:-.03em;color:var(--accent);font-variant-numeric:tabular-nums">{{ item.disp }}</span>
+            </div>
+            <div style="font-size:13.5px;color:var(--t2);margin-top:6px;border-top:1px solid var(--line);padding-top:12px">{{ item.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+      <div data-reveal="" style="margin-top:clamp(46px,7vh,76px);border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.02);padding:22px clamp(18px,3vw,34px);max-width:840px;margin-left:auto;margin-right:auto">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;justify-content:flex-start">
+          <span style="width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent)"></span>
+          <span style="font:600 10px var(--mono);letter-spacing:.16em;color:var(--t3);text-transform:uppercase">Reliability log — live tags</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:11px">
+          <sc-for list="{{ reliability }}" as="item" hint-placeholder-count="3">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--mono);font-size:13.5px">
+              <span style="color:var(--t2)">{{ item.tag }}</span>
+              <span style="flex:1;border-bottom:1px dotted var(--line2);margin:0 4px;height:1px"></span>
+              <span style="color:var(--t3);font-size:11px">{{ item.metric }}</span>
+              <span style="color:var(--accent);font-weight:600;min-width:74px;text-align:right">{{ item.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <section id="modules" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+    <div style="position:absolute;bottom:4%;left:-8%;width:min(620px,55vw);height:520px;background:radial-gradient(circle,rgba(61,220,151,.08) 0%,rgba(61,220,151,0) 68%);pointer-events:none;z-index:-1"></div>
+    <div style="max-width:1240px;margin:0 auto">
+      <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:16px">One platform</div>
+      <h2 data-reveal="" style="font-size:clamp(30px,4.4vw,54px);font-weight:700;letter-spacing:-.03em;line-height:1.02;max-width:20ch">Seven surfaces, one source of truth.</h2>
+      <div data-r="modules" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:clamp(38px,5vh,60px)">
+        <sc-for list="{{ modules }}" as="item" hint-placeholder-count="7">
+          <div data-reveal="" data-dy="40" style="padding:26px 24px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.022)">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+              <div style="width:42px;height:42px;border-radius:11px;background:rgba(61,220,151,.1);border:1px solid rgba(61,220,151,.25);display:flex;align-items:center;justify-content:center"><i data-lucide="{{ item.icon }}" width="20" height="20" stroke-width="1.7" style="color:var(--accent)"></i></div>
+              <span style="font:600 11px var(--mono);color:var(--t3)">{{ item.no }}</span>
+            </div>
+            <div style="font-size:18px;font-weight:600;letter-spacing:-.01em">{{ item.title }}</div>
+            <div style="font-size:14px;color:var(--t2);margin-top:9px;line-height:1.5">{{ item.copy }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIES -->
+  <section id="industries" style="position:relative;z-index:2;background:transparent;padding:clamp(100px,14vh,170px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden">
+    <img data-parallax="" src="assets/fjord.png" alt="" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.7;transform:scale(1.14)">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,#07111B 0%,rgba(7,17,27,.66) 30%,rgba(7,17,27,.58) 58%,#07111B 100%)"></div>
+    <div style="position:absolute;left:0;right:0;bottom:22px;z-index:1;text-align:center;font:600 10px var(--mono);letter-spacing:.18em;color:var(--t3);text-transform:uppercase">Engebø · Sunnfjord, Norway · live pilot</div>
+    <div style="position:relative;z-index:1;max-width:1100px;margin:0 auto;text-align:center">
+      <div data-reveal="" style="font:700 11px var(--mono);letter-spacing:.18em;color:var(--accent);text-transform:uppercase;margin-bottom:18px">Built for heavy industry</div>
+      <h2 data-reveal="" style="font-size:clamp(30px,4.8vw,60px);font-weight:700;letter-spacing:-.03em;line-height:1.04;max-width:20ch;margin:0 auto">Starting where uptime is everything: mining.</h2>
+      <p data-reveal="" style="font-size:clamp(16px,1.9vw,20px);color:var(--t2);max-width:60ch;margin:22px auto 0;line-height:1.55">ONE is proven at Engebø — pit to processing plant to port. The same model extends to any operation where assets are expensive, conditions are harsh and a stopped line costs by the minute.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:38px">
+        <sc-for list="{{ industries }}" as="item" hint-placeholder-count="6">
+          <div data-reveal="" data-dy="20" style="padding:11px 20px;border:1px solid var(--line2);border-radius:999px;font-size:14px;color:var(--t1);background:rgba(255,255,255,.02)">{{ item.name }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" style="position:relative;z-index:2;background:transparent;padding:clamp(80px,10vh,120px) 6vw;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+    <div data-r="two" style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:0.85fr 1.15fr;gap:clamp(32px,5vw,70px);align-items:start">
+      <div>
+        <div data-reveal="" style="font-size:clamp(34px,5vw,62px);font-weight:800;letter-spacing:.02em;line-height:1">DIGITAL<span style="color:var(--accent)">RAIN</span></div>
+        <div data-reveal="" style="font:600 11px var(--mono);letter-spacing:.16em;color:var(--t3);text-transform:uppercase;margin-top:14px">The data layer for the physical world</div>
+      </div>
+      <div>
+        <p data-reveal="" style="font-size:clamp(17px,2vw,23px);color:var(--t1);line-height:1.5;font-weight:500">We build the software that lets heavy industry run on live data instead of lagging reports.</p>
+        <p data-reveal="" style="font-size:clamp(15px,1.6vw,17px);color:var(--t2);line-height:1.6;margin-top:20px">ONE is our flagship platform: a real-time operational twin that unifies telemetry, assets, work and intelligence into one workspace. No more reconciling six dashboards at the end of a shift — the operation tells you what it needs, as it needs it.</p>
+        <div data-r="about3" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:34px">
+          <sc-for list="{{ principles }}" as="item" hint-placeholder-count="3">
+            <div data-reveal="" data-dy="24" style="border-top:1px solid var(--line2);padding-top:14px">
+              <div style="font-size:14.5px;font-weight:600;color:var(--accent)">{{ item.title }}</div>
+              <div style="font-size:13px;color:var(--t2);margin-top:6px;line-height:1.45">{{ item.copy }}</div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CTA -->
+  <section id="contact" style="position:relative;z-index:2;background:transparent;padding:clamp(110px,16vh,200px) 6vw clamp(60px,8vh,90px);text-align:center;overflow:hidden">
+    <div style="position:absolute;top:-30%;left:50%;transform:translateX(-50%);width:min(900px,90vw);height:600px;background:radial-gradient(circle,rgba(61,220,151,.14) 0%,rgba(61,220,151,0) 65%);pointer-events:none"></div>
+    <div style="position:relative;max-width:780px;margin:0 auto">
+      <h2 data-reveal="" style="font-size:clamp(36px,6vw,76px);font-weight:700;letter-spacing:-.035em;line-height:1;text-wrap:balance">See your operation, live.</h2>
+      <p data-reveal="" style="font-size:clamp(16px,2vw,21px);color:var(--t2);margin-top:24px;line-height:1.5;max-width:52ch;margin-left:auto;margin-right:auto">Book a walkthrough and we'll model a slice of your site with your own tags — usually within a week.</p>
+      <div data-reveal="" style="display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-top:40px">
+        <a href="mailto:hello@digitalrain.ai?subject=ONE%20demo%20request" style="display:inline-flex;align-items:center;gap:8px;padding:16px 30px;border-radius:13px;background:var(--accent);color:#07140E;font-weight:700;font-size:16px;text-decoration:none;box-shadow:0 0 36px rgba(61,220,151,.35)">Book a demo<i data-lucide="arrow-right" width="18" height="18" stroke-width="2.2"></i></a>
+        <a href="mailto:hello@digitalrain.ai" style="display:inline-flex;align-items:center;gap:8px;padding:16px 26px;border-radius:13px;background:rgba(255,255,255,.04);color:var(--t1);font-weight:600;font-size:16px;text-decoration:none;border:1px solid var(--line2)">hello@digitalrain.ai</a>
+      </div>
+    </div>
+    <footer style="position:relative;max-width:1240px;margin:clamp(70px,11vh,130px) auto 0;padding-top:26px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:18px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:24px;height:24px;border-radius:7px;background:var(--accent);display:flex;align-items:center;justify-content:center"><div style="width:8px;height:8px;border-radius:2px;background:#07140E"></div></div>
+        <span style="font-weight:800;letter-spacing:.14em;font-size:13px">ONE</span>
+        <span style="font:600 9px var(--mono);letter-spacing:.22em;color:var(--accent);opacity:.8">DIGITALRAIN</span>
+      </div>
+      <div style="font:500 12px var(--mono);color:var(--t3)">© 2026 Digitalrain · The data layer for the physical world</div>
+    </footer>
+  </section>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900},&quot;heroMode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Digital rain&quot;,&quot;Flowing data streams&quot;,&quot;Pulsing grid&quot;],&quot;default&quot;:&quot;Digital rain&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#3DDC97&quot;,&quot;options&quot;:[&quot;#3DDC97&quot;,&quot;#14B8A6&quot;,&quot;#3B82F6&quot;,&quot;#7C5CFF&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Hero&quot;},&quot;smooth&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Motion&quot;}}">
+class Component extends DCLogic {
+  componentDidMount(){
+    this.root = document.querySelector('[data-dr-root]');
+    this.counted = new Set();
+    this.barDone = new Set();
+    this.stop = false;
+    this.mode = this.modeIndex(this.props.heroMode);
+    this.applyAccent();
+    this.initGL();
+    this.initScroll();
+    this.setupReveals();
+    this.startLive();
+    this.refreshIcons();
+  }
+  componentDidUpdate(){
+    this.mode = this.modeIndex(this.props.heroMode);
+    this.applyAccent();
+    this.refreshIcons();
+  }
+  componentWillUnmount(){
+    this.stop = true;
+    try { if(this.lenis && this.lenis.destroy) this.lenis.destroy(); } catch(e){}
+  }
+  modeIndex(m){ return m === 'Flowing data streams' ? 1 : (m === 'Pulsing grid' ? 2 : 0); }
+  refreshIcons(){ try { window.lucide && window.lucide.createIcons(); } catch(e){} }
+  hexRGB(h){ h = (h||'#3DDC97').replace('#',''); return [parseInt(h.slice(0,2),16)/255, parseInt(h.slice(2,4),16)/255, parseInt(h.slice(4,6),16)/255]; }
+  applyAccent(){
+    const a = this.props.accent || '#3DDC97';
+    if(this.root) this.root.style.setProperty('--accent', a);
+    this.accentRGB = this.hexRGB(a);
+    this.accentHex = a;
+  }
+  hexA(h, al){ h = (h||'#3DDC97').replace('#',''); return 'rgba('+parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)+','+al+')'; }
+  scrollTo(sel){
+    const el = this.root && this.root.querySelector(sel);
+    if(!el) return;
+    const y = el.getBoundingClientRect().top + window.scrollY - 56;
+    if(this.lenis) this.lenis.scrollTo(y);
+    else window.scrollTo({ top:y, behavior:'smooth' });
+  }
+  initGL(){
+    const cv = this.root.querySelector('[data-rain]');
+    if(!cv) return;
+    const gl = cv.getContext('webgl', { antialias:false, alpha:false, powerPreference:'high-performance' });
+    if(!gl){ cv.style.background = '#07111B'; return; }
+    const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    const fs = [
+      'precision highp float;',
+      'uniform vec2 uRes;uniform float uTime;uniform int uMode;uniform vec3 uAccent;',
+      'float h11(float n){return fract(sin(n)*43758.5453123);}',
+      'float h21(vec2 p){p=fract(p*vec2(123.34,345.45));p+=dot(p,p+34.345);return fract(p.x*p.y);}',
+      'void main(){',
+      ' vec2 uv=gl_FragCoord.xy/uRes.xy;',
+      ' vec2 asp=vec2(uRes.x/uRes.y,1.0);',
+      ' vec3 base=vec3(0.015,0.041,0.069);',
+      ' float b=0.0;float head=0.0;',
+      ' if(uMode==1){',
+      '  float lanes=20.0;float li=floor(uv.y*lanes);',
+      '  float sp=0.12+h11(li)*0.5;',
+      '  float x=uv.x+uTime*sp*0.5+h11(li+5.0)*10.0;',
+      '  float s=fract(x*1.4);',
+      '  b=pow(1.0-s,5.0)*(0.6+0.4*sin(uTime*1.2+li*1.7));',
+      '  head=pow(1.0-s,22.0);',
+      '  float fy=fract(uv.y*lanes);b*=smoothstep(0.0,0.12,fy)*smoothstep(1.0,0.88,fy);',
+      ' }else if(uMode==2){',
+      '  vec2 gp=uv*vec2(30.0,30.0*uRes.y/uRes.x);vec2 id=floor(gp);vec2 f=fract(gp)-0.5;',
+      '  float d=length(f);',
+      '  float pulse=0.5+0.5*sin(uTime*1.0-(id.x+id.y)*0.45+h21(id)*6.28);',
+      '  b=smoothstep(0.4,0.05,d)*pulse;head=smoothstep(0.13,0.0,d)*pulse;',
+      ' }else{',
+      '  float cols=64.0;float ci=floor(uv.x*cols);',
+      '  float sp=0.25+h11(ci)*0.85;',
+      '  float y=uv.y+uTime*sp*0.15+h11(ci+3.0)*12.0;',
+      '  float s=fract(y*1.7);',
+      '  b=pow(s,6.0);',
+      '  float rows=34.0;float cell=floor((uv.y+uTime*sp*0.15)*rows);',
+      '  b*=0.55+0.45*step(0.42,h21(vec2(ci,cell)));',
+      '  head=pow(s,42.0);',
+      '  float fx=fract(uv.x*cols);b*=smoothstep(0.0,0.09,fx)*smoothstep(1.0,0.91,fx);',
+      ' }',
+      ' vec3 col=base+uAccent*b*0.8+vec3(0.72,1.0,0.88)*head*0.5;',
+      ' float vig=smoothstep(1.28,0.22,length((uv-0.5)*asp));',
+      ' col*=mix(0.95,0.5,vig);',
+      ' col*=mix(0.72,1.0,smoothstep(0.0,0.22,uv.y));',
+      ' gl_FragColor=vec4(col,1.0);',
+      '}'
+    ].join('\n');
+    const mk = (t,s)=>{ const sh=gl.createShader(t); gl.shaderSource(sh,s); gl.compileShader(sh); return sh; };
+    const prog = gl.createProgram();
+    gl.attachShader(prog, mk(gl.VERTEX_SHADER, vs));
+    gl.attachShader(prog, mk(gl.FRAGMENT_SHADER, fs));
+    gl.linkProgram(prog); gl.useProgram(prog);
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,3,-1,-1,3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog,'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    const uRes = gl.getUniformLocation(prog,'uRes'), uTime = gl.getUniformLocation(prog,'uTime'),
+          uMode = gl.getUniformLocation(prog,'uMode'), uAcc = gl.getUniformLocation(prog,'uAccent');
+    const resize = ()=>{ const dpr=Math.min(1.5, window.devicePixelRatio||1); cv.width=Math.floor(innerWidth*dpr); cv.height=Math.floor(innerHeight*dpr); gl.viewport(0,0,cv.width,cv.height); };
+    resize(); addEventListener('resize', resize);
+    const t0 = performance.now();
+    const draw = ()=>{
+      if(this.stop) return;
+      if(window.scrollY < innerHeight*1.35){
+        gl.uniform2f(uRes, cv.width, cv.height);
+        gl.uniform1f(uTime, (performance.now()-t0)/1000);
+        gl.uniform1i(uMode, this.mode||0);
+        const a = this.accentRGB || [0.24,0.86,0.59];
+        gl.uniform3f(uAcc, a[0], a[1], a[2]);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+      requestAnimationFrame(draw);
+    };
+    draw();
+  }
+  initScroll(){
+    const root = this.root;
+    const ease = t => 1 - Math.pow(1-t, 3);
+    const cl = (v,a,b) => Math.max(a, Math.min(b,v));
+    const pins = [...root.querySelectorAll('[data-pin]')];
+    const parallax = [...root.querySelectorAll('[data-parallax]')];
+    const reveals = [...root.querySelectorAll('[data-reveal]')];
+    const bar = root.querySelector('[data-progress]');
+    const update = ()=>{
+      const vh = innerHeight;
+      const sc = window.scrollY;
+      const docH = document.documentElement.scrollHeight - vh;
+      if(bar) bar.style.transform = 'scaleX(' + cl(sc/Math.max(1,docH),0,1).toFixed(4) + ')';
+      for(const el of reveals){
+        const r = el.getBoundingClientRect();
+        if(r.bottom < -120 || r.top > vh + 120) continue;
+        const dy = parseFloat(el.dataset.dy || '30');
+        const e = ease(cl((vh*0.94 - r.top)/(vh*0.5), 0, 1));
+        el.style.transform = 'translateY(' + ((1-e)*dy).toFixed(1) + 'px) scale(' + (0.99 + 0.01*e).toFixed(4) + ')';
+      }
+      for(const el of parallax){
+        const host = el.parentElement.getBoundingClientRect();
+        if(host.bottom < 0 || host.top > vh) continue;
+        const center = (host.top + host.height/2) - vh/2;
+        el.style.transform = 'translateY(' + (center * -0.07).toFixed(1) + 'px) scale(1.14)';
+      }
+      for(const sec of pins){
+        const r = sec.getBoundingClientRect();
+        const top = r.top + sc;
+        const range = Math.max(1, sec.offsetHeight - vh);
+        const p = cl((sc - top)/range, 0, 1);
+        const stage = sec.querySelector('[data-pinstage]');
+        if(stage){
+          if(sc < top){ stage.style.position='absolute'; stage.style.top='0px'; }
+          else if(sc > top + range){ stage.style.position='absolute'; stage.style.top=range+'px'; }
+          else { stage.style.position='fixed'; stage.style.top='0px'; }
+        }
+        const steps = [...sec.querySelectorAll('[data-step]')];
+        const n = steps.length || 1;
+        steps.forEach((st,i)=>{
+          const a = (i/n)*0.72, bnd = a + (0.72/n) + 0.13;
+          const sp = ease(cl((p-a)/(bnd-a), 0, 1));
+          st.style.opacity = (0.16 + 0.84*sp).toFixed(3);
+          st.style.transform = 'translateY(' + ((1-sp)*22).toFixed(1) + 'px)';
+        });
+        const img = sec.querySelector('[data-pinscale]');
+        if(img){ img.style.transform = 'scale(' + (1.08-0.08*p).toFixed(4) + ')'; img.style.filter = 'brightness(' + (0.7+0.32*p).toFixed(3) + ')'; }
+      }
+    };
+    const safeUpdate = ()=>{ try { update(); } catch(e){} };
+    this.update = safeUpdate;
+    const startLenis = ()=>{
+      if(window.Lenis && this.props.smooth !== false){
+        try { this.lenis = new Lenis({ lerp:0.085, wheelMultiplier:1.0, smoothWheel:true }); }
+        catch(e){ this.lenis = null; }
+      }
+      const loop = t => {
+        if(this.stop) return;
+        requestAnimationFrame(loop);
+        if(this.lenis){ try { this.lenis.raf(t); } catch(e){} }
+        safeUpdate();
+        if(!this.live){ try { this.startLive(); } catch(e){} }
+        try { this.liveStep(t || performance.now()); } catch(e){}
+      };
+      requestAnimationFrame(loop);
+    };
+    let tries = 0;
+    const wait = ()=>{ if(window.Lenis || tries > 25){ startLenis(); } else { tries++; setTimeout(wait, 60); } };
+    wait();
+    addEventListener('resize', safeUpdate);
+    addEventListener('scroll', safeUpdate, { passive:true });
+    safeUpdate();
+  }
+  animateCount(el){
+    const to = parseFloat(el.dataset.count);
+    if(isNaN(to)) return;
+    const dec = parseInt(el.dataset.dec || '0');
+    const suf = el.dataset.suf || '';
+    const dur = 1150, t0 = performance.now();
+    const step = ()=>{
+      if(this.stop) return;
+      const p = Math.min(1, (performance.now()-t0)/dur);
+      const e = 1 - Math.pow(1-p, 3);
+      const v = to*e;
+      el.textContent = v.toLocaleString(undefined,{minimumFractionDigits:dec,maximumFractionDigits:dec}) + suf;
+      if(p < 1) requestAnimationFrame(step); else el._countDone = true;
+    };
+    step();
+  }
+  startLive(){
+    const root = this.root;
+    this.live = {
+      sensors: [...root.querySelectorAll('[data-sensor]')].map(card=>{
+        const span = card.querySelector('[data-live]');
+        const cv = card.querySelector('[data-spark]');
+        const base = parseFloat(span.dataset.base), amp = parseFloat(span.dataset.amp)||0, dec = parseInt(span.dataset.dec||'1');
+        const kind = span.dataset.kind || 'default';
+        const hist = []; for(let i=0;i<64;i++) hist.push(base + (Math.random()-0.5)*amp*0.6);
+        return { card, span, cv, ctx: cv?cv.getContext('2d'):null, col: (cv&&cv.dataset.col)||null, base, amp, dec, kind, spike: 0, cur: base, hist };
+      }),
+      twin: [...root.querySelectorAll('[data-twinval]')].map(span=>({
+        span, base: parseFloat(span.dataset.base), amp: parseFloat(span.dataset.amp)||0,
+        dec: parseInt(span.dataset.dec||'0'), suf: span.dataset.suf||''
+      })).filter(o => o.amp>0 && !isNaN(o.base)),
+      charts: [...root.querySelectorAll('[data-chart]')].map(cv=>{
+        const type = cv.dataset.chart;
+        const cols = (cv.dataset.cols || '#3DDC97').split(',');
+        const n = parseInt(cv.dataset.n || '44');
+        const series = type === 'dual' ? 2 : 1;
+        const hists = [], base = [];
+        for(let s=0;s<series;s++){ const h=[]; for(let i=0;i<n;i++) h.push(0.45 + 0.12*Math.sin(i*0.5) + (Math.random()-0.5)*0.12); hists.push(h); }
+        if(type === 'bars'){ for(let i=0;i<n;i++){ const x=(i/(n-1))*2-1; base.push(0.25 + 0.7*Math.exp(-x*x*3.2)); } }
+        return { cv, ctx: cv.getContext('2d'), type, cols, n, hists, base, spike: 0 };
+      }),
+      liveSec: root.querySelector('#live'),
+      twinSec: root.querySelector('#twin'),
+      lastTxt: 0, lastTwin: 0, lastSpark: 0, lastLine: 0, lastBar: 0
+    };
+  }
+  drawSpark(s){
+    if(!s.ctx) return;
+    const w = s.cv.clientWidth||120, h = 24, dpr = Math.min(2, window.devicePixelRatio||1);
+    if(s.cv.width !== Math.round(w*dpr)){ s.cv.width = Math.round(w*dpr); s.cv.height = Math.round(h*dpr); }
+    const W = s.cv.width, H = s.cv.height, ctx = s.ctx;
+    ctx.clearRect(0,0,W,H);
+    const lo = s.base - s.amp*2.4, hi = s.base + s.amp*2.4, rng = Math.max(1e-6, hi-lo), n = s.hist.length;
+    const acc = s.col || this.accentHex || '#3DDC97';
+    ctx.beginPath();
+    for(let i=0;i<n;i++){ const x = i/(n-1)*W, y = H - 3 - ((s.hist[i]-lo)/rng)*(H-6); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+    ctx.strokeStyle = acc; ctx.lineWidth = Math.max(1, 1.3*dpr); ctx.lineJoin = 'round'; ctx.stroke();
+    // leading dot
+    const lx = W - 1, ly = H - 3 - ((s.hist[n-1]-lo)/rng)*(H-6);
+    ctx.beginPath(); ctx.arc(lx, ly, Math.max(1.6, 1.7*dpr), 0, 6.28); ctx.fillStyle = acc; ctx.fill();
+    // fill under
+    ctx.beginPath();
+    for(let i=0;i<n;i++){ const x = i/(n-1)*W, y = H - 3 - ((s.hist[i]-lo)/rng)*(H-6); i?ctx.lineTo(x,y):ctx.moveTo(x,y); }
+    ctx.lineTo(W,H); ctx.lineTo(0,H); ctx.closePath();
+    ctx.fillStyle = this.hexA(acc, 0.1); ctx.fill();
+  }
+  setupReveals(){
+    if(this._revealsInit) return;
+    this._revealsInit = true;
+    const root = this.root;
+    const els = [...root.querySelectorAll('[data-reveal]')];
+    const counters = [...root.querySelectorAll('[data-count]')];
+    const bars = [...root.querySelectorAll('[data-bar]')];
+    const show = el => { el.style.opacity = '1'; };
+    const fireExtras = t => {
+      if(t.dataset.count !== undefined && !t._countDone) this.animateCount(t);
+      if(t.dataset.bar !== undefined) t.style.width = (t.dataset.bar || '0') + '%';
+    };
+    if(!('IntersectionObserver' in window)){
+      els.forEach(show); counters.forEach(fireExtras); bars.forEach(fireExtras);
+      return;
+    }
+    els.forEach(el=>{
+      el.style.opacity = '0';
+      el.style.transition = 'opacity .8s cubic-bezier(.16,1,.3,1)';
+    });
+    const io = new IntersectionObserver((ents, obs)=>{
+      ents.forEach(en=>{ if(en.isIntersecting){ show(en.target); obs.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -4% 0px', threshold: 0.01 });
+    els.forEach(el=>io.observe(el));
+    const xio = new IntersectionObserver((ents, obs)=>{
+      ents.forEach(en=>{ if(en.isIntersecting){ fireExtras(en.target); obs.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.01 });
+    counters.forEach(el=>xio.observe(el));
+    bars.forEach(el=>xio.observe(el));
+  }
+  drawChart(ch){
+    const cv = ch.cv, dpr = Math.min(2, window.devicePixelRatio||1);
+    const w = cv.clientWidth||300, h = cv.clientHeight||90;
+    if(cv.width !== Math.round(w*dpr)){ cv.width = Math.round(w*dpr); cv.height = Math.round(h*dpr); }
+    const W = cv.width, H = cv.height, c = ch.ctx, pad = 3*dpr;
+    c.clearRect(0,0,W,H);
+    if(ch.type === 'bars'){
+      const hist = ch.hists[0], n = hist.length, bw = W/n;
+      for(let i=0;i<n;i++){
+        const bh = Math.max(2*dpr, hist[i]*(H-pad*2));
+        const x = i*bw + bw*0.18, y = H - pad - bh, ww = bw*0.64, r = Math.min(ww/2, 2*dpr);
+        const g = c.createLinearGradient(0, y, 0, H);
+        g.addColorStop(0, ch.cols[0]); g.addColorStop(1, this.hexA(ch.cols[0], 0.22));
+        c.fillStyle = g;
+        c.beginPath(); c.moveTo(x, H-pad); c.lineTo(x, y+r); c.quadraticCurveTo(x, y, x+r, y);
+        c.lineTo(x+ww-r, y); c.quadraticCurveTo(x+ww, y, x+ww, y+r); c.lineTo(x+ww, H-pad); c.closePath(); c.fill();
+      }
+      return;
+    }
+    const plot = (hist, col, fill)=>{
+      const n = hist.length;
+      c.beginPath();
+      for(let i=0;i<n;i++){ const x = i/(n-1)*W, y = H - pad - hist[i]*(H-pad*2); i?c.lineTo(x,y):c.moveTo(x,y); }
+      c.strokeStyle = col; c.lineWidth = Math.max(1.2, 1.6*dpr); c.lineJoin = 'round'; c.stroke();
+      if(fill){
+        c.lineTo(W, H); c.lineTo(0, H); c.closePath();
+        const g = c.createLinearGradient(0,0,0,H);
+        g.addColorStop(0, this.hexA(col, 0.30)); g.addColorStop(1, this.hexA(col, 0));
+        c.fillStyle = g; c.fill();
+      }
+    };
+    if(ch.type === 'dual'){ plot(ch.hists[0], ch.cols[0], false); plot(ch.hists[1], ch.cols[1]||ch.cols[0], false); }
+    else { plot(ch.hists[0], ch.cols[0], ch.type === 'area'); }
+  }
+  advanceChart(ch){
+    const cl01 = v => Math.max(0.05, Math.min(0.95, v));
+    if(ch.type === 'bars'){
+      const hist = ch.hists[0];
+      for(let i=0;i<hist.length;i++){ const target = ch.base[i]*(0.55 + Math.random()*0.5); hist[i] += (target - hist[i])*0.4; }
+      return;
+    }
+    ch.hists.forEach((hist, si)=>{
+      const last = hist[hist.length-1];
+      let nv;
+      if(ch.type === 'line'){
+        if(ch.spike > 0){ nv = last + 0.05; ch.spike--; }
+        else { nv = last + (Math.random()-0.5)*0.10 + (0.5-last)*0.05; if(Math.random()<0.05) ch.spike = 2; }
+      } else if(ch.type === 'dual'){
+        const drift = si === 0 ? -0.005 : 0.0;
+        nv = last + (Math.random()-0.5)*0.045 + drift + (0.5-last)*0.02;
+        if(si === 0 && last < 0.16) nv = last + 0.55;
+      } else {
+        // area (engine temperature) — smooth, slow drift
+        nv = last + (Math.random()-0.5)*0.045 + (0.5-last)*0.03;
+      }
+      hist.push(cl01(nv)); hist.shift();
+    });
+  }
+  advanceSensor(s){
+    const noise = (Math.random()-0.5), a = s.amp;
+    switch(s.kind){
+      case 'temp':       // engine temperature — slow, smooth drift
+        s.cur += (s.base - s.cur)*0.04 + noise*a*0.22; break;
+      case 'pressure':   // hydraulic — mostly steady with sharp spikes
+        if(s.spike > 0){ s.cur += a*0.7; s.spike--; }
+        else { s.cur += (s.base - s.cur)*0.07 + noise*a*0.45; if(Math.random() < 0.045) s.spike = 2; }
+        break;
+      case 'vibration':  // noisy, high-frequency
+        s.cur += (s.base - s.cur)*0.10 + noise*a*1.25; break;
+      case 'fuel':       // slow burn-down, then refuel
+        s.cur += -a*0.05 + noise*a*0.12;
+        if(s.cur < s.base - a*1.9) s.cur = s.base + a*1.2;
+        break;
+      case 'oil':        // steady with small ripple
+        s.cur += (s.base - s.cur)*0.09 + noise*a*0.3; break;
+      case 'battery':    // very stable
+        s.cur += (s.base - s.cur)*0.14 + noise*a*0.16; break;
+      case 'eps':        // performance score — slow, smooth
+        s.cur += (s.base - s.cur)*0.05 + noise*a*0.3; break;
+      default:
+        s.cur += (s.base - s.cur)*0.07 + noise*a*0.5;
+    }
+    const lo = s.base - a*2.2, hi = s.base + a*2.2;
+    s.cur = Math.max(lo, Math.min(hi, s.cur));
+  }
+  liveStep(now){
+    const L = this.live; if(!L) return;
+    const vh = window.innerHeight;
+    // realistic, decoupled cadences (sub-second telemetry; charts are 7-day trends)
+    const sparkDue = now - L.lastSpark > 380;   // ~2.6 readings/sec
+    const txtDue   = now - L.lastTxt   > 950;   // value display ~1/sec
+    const lineDue  = now - L.lastLine  > 650;   // trend lines advance slowly
+    const barDue   = now - L.lastBar   > 430;   // vibration histogram shimmer
+    if(sparkDue) L.lastSpark = now;
+    if(txtDue) L.lastTxt = now;
+    if(lineDue) L.lastLine = now;
+    if(barDue) L.lastBar = now;
+    for(const s of L.sensors){
+      const r = s.card.getBoundingClientRect();
+      if(r.bottom < -40 || r.top > vh + 40) continue;
+      if(sparkDue){
+        this.advanceSensor(s);
+        s.hist.push(s.cur); if(s.hist.length > 64) s.hist.shift();
+        this.drawSpark(s);
+      }
+      if(txtDue){ s.span.textContent = s.cur.toLocaleString(undefined,{minimumFractionDigits:s.dec,maximumFractionDigits:s.dec}); }
+    }
+    if(L.charts){
+      for(const ch of L.charts){
+        const due = ch.type === 'bars' ? barDue : lineDue;
+        if(!due) continue;
+        const r = ch.cv.getBoundingClientRect();
+        if(r.bottom < -40 || r.top > vh + 40) continue;
+        this.advanceChart(ch);
+        this.drawChart(ch);
+      }
+    }
+    if(L.twinSec && now - L.lastTwin > 2200){
+      const r = L.twinSec.getBoundingClientRect();
+      if(r.top < vh && r.bottom > 0){
+        L.lastTwin = now;
+        for(const o of L.twin){ const v = o.base + (Math.random()-0.5)*o.amp*2; o.span.textContent = v.toLocaleString(undefined,{minimumFractionDigits:o.dec,maximumFractionDigits:o.dec}) + o.suf; }
+      }
+    }
+  }
+  renderVals(){
+    const c = this.props.accent || '#3DDC97';
+    return {
+      heroMode: this.props.heroMode || 'Digital rain',
+      bookDemo: () => this.scrollTo('#contact'),
+      goPlatform: () => this.scrollTo('#platform'),
+      goTwin: () => this.scrollTo('#twin'),
+      goAssets: () => this.scrollTo('#assets'),
+      goIndustries: () => this.scrollTo('#industries'),
+      goAbout: () => this.scrollTo('#about'),
+      pillars: [
+        { no:'01', word:'Sense', copy:'Every sensor, asset and process across the site — streamed into ONE in real time, sub-second, no batch.' },
+        { no:'02', word:'Model', copy:'A living digital twin mirrors the whole operation, node by node, exactly as it runs right now.' },
+        { no:'03', word:'Act', copy:'Predict failures, dispatch crews and rebalance load — and move before downtime ever starts.' }
+      ],
+      twinStats: [
+        { label:'Production', value:'248 tph', base:'248', amp:'2', suf:' tph', dec:'0' },
+        { label:'Uptime', value:'99.2%', base:'99.2', amp:'0.05', suf:'%', dec:'1' },
+        { label:'Process status', value:'Optimal', base:'', amp:'0', suf:'', dec:'0' },
+        { label:'Lab data', value:'Connected', base:'', amp:'0', suf:'', dec:'0' }
+      ],
+      sensors: [
+        { label:'Engine temperature', val:'80.2', dec:'1', unit:'°C', amp:'0.5', kind:'temp' },
+        { label:'Hydraulic pressure', val:'3247.5', dec:'1', unit:'PSI', amp:'14', kind:'pressure' },
+        { label:'Vibration level', val:'2.0', dec:'1', unit:'mm/s', amp:'0.3', kind:'vibration' },
+        { label:'Fuel level', val:'79.0', dec:'1', unit:'%', amp:'0.2', kind:'fuel' },
+        { label:'Oil pressure', val:'50.4', dec:'1', unit:'PSI', amp:'1.0', kind:'oil' },
+        { label:'Battery voltage', val:'14.1', dec:'1', unit:'V', amp:'0.12', kind:'battery' }
+      ],
+      machines: [
+        { name:'Excavator EX-A1', code:'eq-a1', model:'Komatsu PC8000-6', eps:'92', samp:'1.4', health:'92', hours:'9,800', status:'Operational', statusColor:c, statusBorder:'rgba(61,220,151,.35)' },
+        { name:'Haul Truck HT-A2', code:'eq-a2', model:'Caterpillar 797F', eps:'88', samp:'1.7', health:'88', hours:'12,450', status:'Operational', statusColor:c, statusBorder:'rgba(61,220,151,.35)' },
+        { name:'Wheel Loader WL-A3', code:'eq-a3', model:'Liebherr L586', eps:'87', samp:'1.5', health:'87', hours:'6,800', status:'Operational', statusColor:c, statusBorder:'rgba(61,220,151,.35)' },
+        { name:'Drill Rig DR-A4', code:'eq-a4', model:'Sandvik DI650', eps:'85', samp:'3.0', health:'85', hours:'7,200', status:'1 Alert', statusColor:'#F5A524', statusBorder:'rgba(245,165,36,.4)' },
+        { name:'Conveyor CV-A5', code:'eq-a5', model:'Continental ST-2000', eps:'91', samp:'1.3', health:'91', hours:'15,200', status:'Operational', statusColor:c, statusBorder:'rgba(61,220,151,.35)' }
+      ],
+      fleetKpis: [
+        { val:'20', dec:'0', suf:'', label:'Total assets', sub:'+5.7%', subColor:c },
+        { val:'19', dec:'0', suf:'', label:'Operational', sub:'95%', subColor:'var(--t3)' },
+        { val:'89', dec:'0', suf:'', label:'Avg. EPS', sub:'+3.2%', subColor:c },
+        { val:'204', dec:'0', suf:'k', label:'Total hours', sub:'+8.1%', subColor:c },
+        { val:'3', dec:'0', suf:'', label:'Active alerts', sub:'+3', subColor:'#F5A524' },
+        { val:'1', dec:'0', suf:'', label:'In maintenance', sub:'5%', subColor:'var(--t3)' }
+      ],
+      healthDist: [
+        { label:'Low', value:'95.0% (19)', color:c, w:'95' },
+        { label:'Medium', value:'5.0% (1)', color:'#F5A524', w:'5' },
+        { label:'High', value:'0.0% (0)', color:'#EF5B5B', w:'0' }
+      ],
+      ranges: [ { t:'1H', on:'0' }, { t:'24H', on:'0' }, { t:'7D', on:'1' }, { t:'30D', on:'0' } ],
+      charts: [
+        { name:'Engine temperature trend', kind:'Area' },
+        { name:'Hydraulic pressure', kind:'Line' },
+        { name:'Vibration analysis', kind:'Histogram' },
+        { name:'Fuel & oil levels', kind:'Dual line' }
+      ],
+      twinNodes: [
+        { label:'Silo group 1', value:'74% full' },
+        { label:'Tunnel access', value:'Secured' },
+        { label:'Feeder CV-02', value:'Active' },
+        { label:'Cargo vessel 01', value:'Loading' }
+      ],
+      appNav: [
+        { name:'Dashboard', icon:'layout-dashboard', col:'var(--t3)', fw:'500', bg:'transparent' },
+        { name:'Sites', icon:'map-pin', col:'var(--t3)', fw:'500', bg:'transparent' },
+        { name:'Zones', icon:'map', col:'var(--t3)', fw:'500', bg:'transparent' },
+        { name:'Assets', icon:'truck', col:'var(--accent)', fw:'600', bg:'rgba(61,220,151,.12)' },
+        { name:'Work', icon:'clipboard-list', col:'var(--t3)', fw:'500', bg:'transparent' },
+        { name:'Schedule', icon:'calendar', col:'var(--t3)', fw:'500', bg:'transparent' },
+        { name:'Intelligence', icon:'sparkles', col:'var(--t3)', fw:'500', bg:'transparent' }
+      ],
+      appStats: [
+        { label:'Engine temp', val:'80.2', unit:'°C', w:'80', col:'var(--accent)' },
+        { label:'Hydraulic', val:'3247.5', unit:'PSI', w:'66', col:'#4DA3FF' },
+        { label:'Vibration', val:'2.0', unit:'mm/s', w:'22', col:'#A78BFA' },
+        { label:'Fuel level', val:'79.0', unit:'%', w:'79', col:'var(--accent)' },
+        { label:'Oil pressure', val:'50.4', unit:'PSI', w:'55', col:'var(--accent)' },
+        { label:'Battery', val:'14.1', unit:'V', w:'88', col:'#F5A524' }
+      ],
+      kpis: [
+        { val:'99.2', dec:'1', suf:'%', disp:'99.2%', label:'Plant uptime, sustained' },
+        { val:'248', dec:'0', suf:' tph', disp:'248 tph', label:'Throughput vs 250 tph target' },
+        { val:'95', dec:'0', suf:'%', disp:'95%', label:'Fleet at low health-risk' },
+        { val:'0', dec:'0', suf:'', disp:'0', label:'High-risk assets on site' }
+      ],
+      reliability: [
+        { tag:'3130-CV-010', metric:'Availability', value:'99.6%' },
+        { tag:'3130-CV-007', metric:'Availability', value:'99.4%' },
+        { tag:'3130-CR-008', metric:'Crusher pressure', value:'163 bar' }
+      ],
+      modules: [
+        { icon:'layout-dashboard', no:'01', title:'Dashboard', copy:'The whole operation at a glance — live KPIs, open alerts and today\u2019s priorities.' },
+        { icon:'map-pin', no:'02', title:'Sites', copy:'Every location you run, pit to processing plant to port, in one place.' },
+        { icon:'map', no:'03', title:'Zones', copy:'Split each site into operational zones and track them independently.' },
+        { icon:'truck', no:'04', title:'Assets', copy:'Every machine with a live health and equipment-performance score.' },
+        { icon:'clipboard-list', no:'05', title:'Work', copy:'Dispatch crews and work orders against live conditions, not yesterday\u2019s plan.' },
+        { icon:'calendar', no:'06', title:'Schedule', copy:'Plan shifts, maintenance and jobs on a single operating timeline.' },
+        { icon:'sparkles', no:'07', title:'Intelligence', copy:'AI that reads the twin and recommends the next move — and explains why.' }
+      ],
+      industries: [
+        { name:'Mining' }, { name:'Mineral processing' }, { name:'Ports & loading' },
+        { name:'Aggregates' }, { name:'Cement' }, { name:'Heavy manufacturing' }
+      ],
+      principles: [
+        { title:'Live, not lagging', copy:'Decisions on data that\u2019s seconds old, never shifts old.' },
+        { title:'One model', copy:'Every team reading the same operating picture.' },
+        { title:'Acts, not alerts', copy:'The system proposes the fix, not just the problem.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
